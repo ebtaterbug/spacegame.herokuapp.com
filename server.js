@@ -111,8 +111,14 @@ io.on("connection", (socket) => {
     players.get(socket.id).thrusting = false
   })
 
-// Game Loop
-setInterval(update, 2000 / FPS)
+  setInterval(emit, 1500 / FPS)
+    
+  function emit(){
+    socket.emit("getPlayers", [...players.values()])
+  }
+})
+
+setInterval(update, 1500 / FPS)
   
 function update() {
     for (const [id, ship] of players) {
@@ -124,10 +130,6 @@ function update() {
             ship.thrust.y = -ship.thrust.y/2
         }
     }
-    socket.emit("getPlayers", [...players.values()])
 }
-  
-})
-
 
 httpServer.listen(PORT)
