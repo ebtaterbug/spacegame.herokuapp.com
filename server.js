@@ -18,14 +18,14 @@ players = new Map()
 
 var moon = {
     mass: 10,
-    x: 500,
-    y: 500
+    x: 0,
+    y: 0
 }
 
 class Ship {
   constructor() {
-      this.x = 50;
-      this.y = 50;
+      this.x = 100;
+      this.y = 100;
       this.r = SHIP_SIZE / 2;
       this.a = 90 / 180 * Math.PI;
       this.rot = 0;
@@ -35,6 +35,7 @@ class Ship {
           y: 0
       };
       this.mass = 1;
+      this.id
   }
 
   rotate(){
@@ -81,6 +82,7 @@ class Ship {
 
 io.on("connection", (socket) => {
     let newPlayer = new Ship()
+    newPlayer.id = socket.id
     players.set(socket.id, newPlayer)
   
   socket.on('disconnect', () => {
