@@ -6,7 +6,7 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { /* options */ });
 const PORT = process.env.PORT || 3000
-app.use(express.static(__dirname + '\\client'))
+app.use(express.static('client'))
 
 
 const FPS = 100
