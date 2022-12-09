@@ -5,6 +5,17 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Game</title>
+    <style>
+      body {
+        overflow: hidden;
+      }
+
+      #canvas {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+      }
+    </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
@@ -13,24 +24,29 @@
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script><script>
   const socket = io()
   
-  const FPS = 60 //Frames Per Second
+  const FPS = 60
   var canv = document.getElementById("canvas")
   var ctx = canv.getContext('2d')
-  canv.width = 1000
-  canv.height = 1000
+  canv.width = window.innerWidth
+  canv.height = window.innerHeight
+
+  window.addEventListener("resize", function (){
+    canv.width = window.innerWidth
+    canv.height = window.innerHeight
+  })
 
   document.addEventListener("keydown", keyDown)
   document.addEventListener("keyup", keyUp)
 
   function keyDown(e){
       switch(e.keyCode){
-          case 37: 
+          case 65: 
             socket.emit('leftKeyDown')
               break
-          case 38: 
+          case 87: 
             socket.emit('upKeyDown')
               break
-          case 39: 
+          case 68: 
             socket.emit('rightKeyDown')
               break
       }
@@ -38,19 +54,17 @@
 
   function keyUp(e) {
       switch(e.keyCode){
-          case 37: 
+          case 65: 
             socket.emit('leftKeyUp')
               break
-          case 38: 
+          case 87: 
             socket.emit('upKeyUp')
               break
-          case 39: 
+          case 68: 
             socket.emit('rightKeyUp')
               break
       }
   }
-
-
 
     // Get players  
     socket.on("getPlayers", (players) => {
@@ -63,8 +77,8 @@
           }
         }
 
-        moonx = 500 - myShip.x
-        moony = 500 - myShip.y
+        moonx = 0-myShip.x+canv.width/2
+        moony = 0-myShip.y+canv.height/2
 
         ctx.beginPath()
         ctx.arc(moonx, moony, 100, 0, 2 * Math.PI)
@@ -86,7 +100,7 @@
                     ctx.drawImage(image, x, y, w, h);
                     ctx.restore();
                 }
-                drawImage2(ctx, img, 450, 450, 100, 100, -ship.a+7.85)
+                drawImage2(ctx, img, canv.width/2-50, canv.height/2-50, 100, 100, -ship.a+7.85)
               }
               drawMyShip()
             }
@@ -102,7 +116,7 @@
                     ctx.drawImage(image, x, y, w, h);
                     ctx.restore();
                 }
-                drawImage2(ctx, img, ship.x-myShip.x+450, ship.y-myShip.y+450, 100, 100, -ship.a+7.85)
+                drawImage2(ctx, img, ship.x-myShip.x+canv.width/2-50, ship.y-myShip.y+canv.height/2-50, 100, 100, -ship.a+7.85)
             }
             drawShip()
             }  
