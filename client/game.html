@@ -89,6 +89,7 @@
 
   document.addEventListener("keydown", keyDown)
   document.addEventListener("keyup", keyUp)
+  document.addEventListener("click", shoot)
 
   //document.getElementById("left").onclick = function() {socket.emit('left')}
   //document.getElementById("right").onclick = function() {socket.emit('right')}
@@ -98,10 +99,13 @@
   addEventListener('wheel', (e) => {
     if (e.deltaY < 0) {
       scale +=0.1
-      console.log(scale)
-    } else {
+    } else if (scale > 0.19) {
       scale -=0.1
     }
+  })
+
+  addEventListener('mousemove', (e) => {
+    socket.emit('mouseMove', e.pageX, canv.width/2, e.pageY, canv.height/2)
   })
 
   function keyDown(e){
@@ -120,6 +124,10 @@
           break
       }
   }
+
+function shoot(e) {
+  socket.emit('shoot')
+}
 
   function keyUp(e) {
       switch(e.keyCode){

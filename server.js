@@ -145,6 +145,13 @@ io.on("connection", (socket) => {
     bullets.set(bullet.x, bullet)
   })
 
+  socket.on("mouseMove", (x1, x2, y1, y2) => {
+    players.get(socket.id).a = Math.atan2(
+      x2 - x1, 
+      y2 - y1
+    )+309.43
+  })
+
   socket.on("leftKeyDown", () => {
     players.get(socket.id).rot = TURN_SPEED / 180 * Math.PI / FPS
   })
