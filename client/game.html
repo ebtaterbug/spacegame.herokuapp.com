@@ -81,7 +81,6 @@
   canv.width = window.innerWidth
   canv.height = window.innerHeight
 
-
   window.addEventListener("resize", function (){
     canv.width = window.innerWidth
     canv.height = window.innerHeight
@@ -143,16 +142,49 @@ function shoot(e) {
       }
   }
 
+  
+
+  
+    let lineX = 1
+    let lineY = 1
+
     // Get players  
     socket.on("getState", (players, bullets) => {
-        ctx.fillStyle = 'black'
-        ctx.fillRect(0, 0, canv.width, canv.height)
         myShip = null
         for (let i=0; i<players.length; i++) {
           if (players[i].id === socket.id) {
             myShip = players[i]
+            if (lineX >= 50) {
+              lineX = 1*scale
+            } else {
+              lineX -= myShip.thrust.x*scale
+            }
+            if (lineY >= 50) {
+              lineY = 1*scale
+            } else {
+              lineY -= myShip.thrust.y*scale
+            }
           }
+          break
         }
+
+        ctx.fillStyle = 'black'
+        ctx.fillRect(0, 0, canv.width, canv.height)
+
+        for (var x = lineX; x < canv.width; x += 50) {
+          ctx.moveTo(x, 0)
+          ctx.lineTo(x, canv.height)
+        }
+        
+        for (var y = lineY; y < canv.height; y += 50) {
+          ctx.moveTo(0, y)
+          ctx.lineTo(canv.width, y)
+        }
+        
+        ctx.strokeStyle = "#141414"
+        ctx.stroke()
+
+        
         // Draw Bullets
         for (let i=0; i<bullets.length; i++) {
           bulletx = (bullets[i].x*scale)-(myShip.x*scale)+canv.width/2

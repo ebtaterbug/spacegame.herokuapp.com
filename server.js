@@ -7,6 +7,9 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {});
 const PORT = process.env.PORT || 3000
 app.use(express.static('client'))
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/client/game.html')
+})
 
 const FPS = 100
 const SHIP_SIZE = 30
