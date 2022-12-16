@@ -7,9 +7,9 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {});
 const PORT = process.env.PORT || 3000
 app.use(express.static('client'))
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/client/game.html')
-})
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/client/game.html')
+// })
 
 const FPS = 100
 const SHIP_SIZE = 30
@@ -70,6 +70,7 @@ class Bullet {
       let squareDistance = (this.x-object.x)*(this.x-object.x) + (this.y-object.y)*(this.y-object.y);
       return squareDistance <= ((this.r + object.r) * (this.r + object.r))
   }
+
 }
 
 class Ship {

@@ -168,9 +168,11 @@ function shoot(e) {
           break
         }
 
+        // Draw Background
         ctx.fillStyle = 'black'
         ctx.fillRect(0, 0, canv.width, canv.height)
 
+        // Draw Grid
         for (var x = lineX; x < canv.width; x += 50) {
           ctx.moveTo(x, 0)
           ctx.lineTo(x, canv.height)
@@ -183,6 +185,12 @@ function shoot(e) {
         
         ctx.strokeStyle = "#141414"
         ctx.stroke()
+
+        // Draw Co-ordinates
+        ctx.font = "20px Arial"
+        ctx.fillStyle = "white"
+        ctx.fillText(`X: ${Math.floor(myShip.x)}`, 10, 50)
+        ctx.fillText(`Y: ${Math.floor(myShip.y)}`, 10, 80)
 
         
         // Draw Bullets
