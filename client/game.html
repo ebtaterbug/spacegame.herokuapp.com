@@ -154,18 +154,19 @@ function shoot(e) {
         for (let i=0; i<players.length; i++) {
           if (players[i].id === socket.id) {
             myShip = players[i]
-            if (lineX >= 50) {
-              lineX = 1*scale
-            } else {
-              lineX -= myShip.thrust.x*scale
-            }
-            if (lineY >= 50) {
-              lineY = 1*scale
-            } else {
-              lineY -= myShip.thrust.y*scale
-            }
+            break
           }
-          break
+        }
+
+        if (lineX >= 50) {
+          lineX = 1*scale
+        } else {
+          lineX -= myShip.thrust.x*scale
+        }
+        if (lineY >= 50) {
+          lineY = 1*scale
+        } else {
+          lineY -= myShip.thrust.y*scale
         }
 
         // Draw Background
@@ -187,10 +188,10 @@ function shoot(e) {
         ctx.stroke()
 
         // Draw Co-ordinates
-        //ctx.font = "20px Arial"
-        //ctx.fillStyle = "white"
-        //ctx.fillText(`X: ${Math.floor(myShip.x)}`, 10, 50)
-        //ctx.fillText(`Y: ${Math.floor(myShip.y)}`, 10, 80)
+        ctx.font = "20px Arial"
+        ctx.fillStyle = "white"
+        ctx.fillText(`X: ${Math.floor(myShip.x)}`, 10, 50)
+        ctx.fillText(`Y: ${Math.floor(myShip.y)}`, 10, 80)
 
         
         // Draw Bullets
