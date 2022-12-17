@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
 })
 
 const FPS = 100
-const SHIP_SIZE = 30
+const SHIP_SIZE = 25
 const TURN_SPEED = 270
 const SHIP_THRUST = 8
 

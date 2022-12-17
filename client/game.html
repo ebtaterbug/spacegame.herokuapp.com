@@ -218,36 +218,95 @@ function shoot(e) {
         for (let i=0; i<players.length; i++) {
             ship = players[i]
             if (players[i].id === socket.id) {
-              function drawMyShip(){
-                var img = new Image()
-                img.src = 'lunarlander.png'
-                function drawImage2(ctx, image, x, y, w, h, degrees){
-                    ctx.save();
-                    ctx.translate(x+w/2, y+h/2);
-                    ctx.rotate(degrees);
-                    ctx.translate(-x-w/2, -y-h/2);
-                    ctx.drawImage(image, x, y, w, h);
-                    ctx.restore();
-                }
-                drawImage2(ctx, img, canv.width/2-50*scale, canv.height/2-50*scale, 100*scale, 100*scale, -ship.a+7.85)
+              myShipX = canv.width/2
+              myShipY = canv.height/2
+
+              // draw my ship
+              ctx.lineWidth = 1
+              ctx.beginPath();
+              ctx.moveTo( // nose of the ship
+                myShipX + 4 / 3 * (myShip.r+5) * Math.cos(myShip.a) * scale,
+                myShipY - 4 / 3 * (myShip.r+5) * Math.sin(myShip.a) * scale
+              )
+              ctx.lineTo( // rear left
+                myShipX - (myShip.r+5) * (2 / 3 * Math.cos(myShip.a) + Math.sin(myShip.a)) * scale,
+                myShipY + (myShip.r+5) * (2 / 3 * Math.sin(myShip.a) - Math.cos(myShip.a)) * scale
+              )
+              ctx.lineTo( // rear right
+                myShipX - (myShip.r+5) * (2 / 3 * Math.cos(myShip.a) - Math.sin(myShip.a)) * scale,
+                myShipY + (myShip.r+5) * (2 / 3 * Math.sin(myShip.a) + Math.cos(myShip.a)) * scale
+              )
+              ctx.closePath()
+              ctx.stroke()
+              ctx.fillStyle = "#2CB4D5"
+              ctx.fill()
+
+              if (myShip.thrusting) {
+                // draw the thruster
+                ctx.fillStyle = "red";
+                ctx.strokeStyle = "yellow";
+                ctx.beginPath();
+                ctx.moveTo( // rear left
+                    myShipX - (myShip.r+5) * (2 / 3 * Math.cos(myShip.a) + 0.5 * Math.sin(myShip.a)) * scale,
+                    myShipY + (myShip.r+5) * (2 / 3 * Math.sin(myShip.a) - 0.5 * Math.cos(myShip.a)) * scale
+                );
+                ctx.lineTo( // rear centre (behind the ship)
+                  myShipX - (myShip.r+5) * 5 / 3 * Math.cos(myShip.a) * scale,
+                  myShipY + (myShip.r+5) * 5 / 3 * Math.sin(myShip.a) * scale
+                );
+                ctx.lineTo( // rear right
+                  myShipX - (myShip.r+5) * (2 / 3 * Math.cos(myShip.a) - 0.5 * Math.sin(myShip.a)) * scale,
+                  myShipY + (myShip.r+5) * (2 / 3 * Math.sin(myShip.a) + 0.5 * Math.cos(myShip.a)) * scale
+                );
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
               }
-              drawMyShip()
             }
             else {
-              function drawShip(){
-                var img = new Image()
-                img.src = 'lunarlander.png'
-                function drawImage2(ctx, image, x, y, w, h, degrees){
-                    ctx.save();
-                    ctx.translate(x+w/2, y+h/2);
-                    ctx.rotate(degrees);
-                    ctx.translate(-x-w/2, -y-h/2);
-                    ctx.drawImage(image, x, y, w, h);
-                    ctx.restore();
-                }
-                drawImage2(ctx, img, (ship.x*scale)-(myShip.x*scale)+canv.width/2-50*scale, (ship.y*scale)-(myShip.y*scale)+canv.height/2-50*scale, 100*scale, 100*scale, -ship.a+7.85)
-            }
-            drawShip()
+              // draw enemy ship
+              shipX = (ship.x*scale)-(myShip.x*scale)+canv.width/2
+              shipY = (ship.y*scale)-(myShip.y*scale)+canv.height/2
+
+              ctx.lineWidth = 1
+              ctx.beginPath();
+              ctx.moveTo( // nose of the ship
+                shipX + 4 / 3 * (ship.r+5) * Math.cos(ship.a) * scale,
+                shipY - 4 / 3 * (ship.r+5) * Math.sin(ship.a) * scale
+              )
+              ctx.lineTo( // rear left
+                shipX - (ship.r+5) * (2 / 3 * Math.cos(ship.a) + Math.sin(ship.a)) * scale,
+                shipY + (ship.r+5) * (2 / 3 * Math.sin(ship.a) - Math.cos(ship.a)) * scale
+              )
+              ctx.lineTo( // rear right
+                shipX - (ship.r+5) * (2 / 3 * Math.cos(ship.a) - Math.sin(ship.a)) * scale,
+                shipY + (ship.r+5) * (2 / 3 * Math.sin(ship.a) + Math.cos(ship.a)) * scale
+              )
+              ctx.closePath()
+              ctx.stroke()
+              ctx.fillStyle = "#EC611C"
+              ctx.fill()
+              if (ship.thrusting) {
+                // draw the thruster
+                ctx.fillStyle = "red";
+                ctx.strokeStyle = "yellow";
+                ctx.beginPath();
+                ctx.moveTo( // rear left
+                    shipX - (ship.r+5) * (2 / 3 * Math.cos(ship.a) + 0.5 * Math.sin(ship.a)) * scale,
+                    shipY + (ship.r+5) * (2 / 3 * Math.sin(ship.a) - 0.5 * Math.cos(ship.a)) * scale
+                );
+                ctx.lineTo( // rear centre (behind the ship)
+                  shipX - (ship.r+5) * 5 / 3 * Math.cos(ship.a) * scale,
+                  shipY + (ship.r+5) * 5 / 3 * Math.sin(ship.a) * scale
+                );
+                ctx.lineTo( // rear right
+                  shipX - (ship.r+5) * (2 / 3 * Math.cos(ship.a) - 0.5 * Math.sin(ship.a)) * scale,
+                  shipY + (ship.r+5) * (2 / 3 * Math.sin(ship.a) + 0.5 * Math.cos(ship.a)) * scale
+                );
+                ctx.closePath()
+                ctx.fill()
+                ctx.stroke()
+              }
             }  
         }
     })
