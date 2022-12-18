@@ -59,7 +59,49 @@
         color: white;
         padding: 8px;
       }
-  
+      
+
+      /* Modal */
+      .modal {
+        display: block; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+      }
+      
+      /* Modal Content/Box */
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%; /* Could be more or less, depending on screen size */
+      }
+
+      input {
+        width: 84%;
+      }
+
+      /* The Close Button */
+      .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      
+      .close:hover,
+      .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+      }
 
     </style>
 </head>
@@ -69,6 +111,16 @@
     <button class="button" id='left'>Left</button>
     <button class="button" id='thrust'>Thrust</button>
     <button class="button" id='right'>Right</button> -->
+
+    <div id="myModal" class="modal">
+      <div class="modal-content">
+        <span class="close"></span>
+        <form id="form">
+          <input type="text" placeholder="Enter your name" id="input">
+          <button type="submit" id="button">Enter</button>
+        </form>
+      </div>
+    </div>
 </body>
 
 <script src="https://cdn.socket.io/4.5.4/socket.io.min.js" integrity="sha384-/KNQL8Nu5gCHLqwqfQjA689Hhoqgi2S84SNUxC3roTe4EhJ9AfLkp8QiQcU8AMzI" crossorigin="anonymous"></script><script>
@@ -81,7 +133,19 @@
   canv.width = window.innerWidth
   canv.height = window.innerHeight
 
-  window.addEventListener("resize", function (){
+  // Modal
+  var form = document.getElementById("form")
+  var modal = document.getElementById("myModal")
+  var span = document.getElementsByClassName("close")[0]
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    var name = document.getElementById('input').value
+    modal.style.display = "none"
+    socket.emit('submit', name)
+  })
+
+  window.addEventListener("resize", () => {
     canv.width = window.innerWidth
     canv.height = window.innerHeight
   })
@@ -109,18 +173,9 @@
 
   function keyDown(e){
       switch(e.keyCode){
-          case 65: 
-            socket.emit('leftKeyDown')
-              break
           case 87: 
             socket.emit('upKeyDown')
               break
-          case 68: 
-            socket.emit('rightKeyDown')
-              break
-          case 32:
-            socket.emit('shoot')
-          break
       }
   }
 
@@ -130,23 +185,16 @@ function shoot(e) {
 
   function keyUp(e) {
       switch(e.keyCode){
-          case 65: 
-            socket.emit('leftKeyUp')
-              break
           case 87: 
             socket.emit('upKeyUp')
-              break
-          case 68: 
-            socket.emit('rightKeyUp')
               break
       }
   }
 
   
-
-  
-    let lineX = 1
-    let lineY = 1
+  let lineX = 1
+  let lineY = 1
+  const tileSize = 100
 
     // Get players  
     socket.on("getState", (players, bullets) => {
@@ -157,29 +205,29 @@ function shoot(e) {
             break
           }
         }
-        
-        if (lineX >= 50) {
+
+        if (lineX >= tileSize) {
           lineX = 1*scale
         } else {
           lineX -= myShip.thrust.x*scale
         }
-        if (lineY >= 50) {
+        if (lineY >= tileSize) {
           lineY = 1*scale
         } else {
           lineY -= myShip.thrust.y*scale
         }
 
         // Draw Background
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = "black"
         ctx.fillRect(0, 0, canv.width, canv.height)
 
         // Draw Grid
-        for (var x = lineX; x < canv.width; x += 50) {
+        for (var x = lineX; x < canv.width; x += tileSize) {
           ctx.moveTo(x, 0)
           ctx.lineTo(x, canv.height)
         }
         
-        for (var y = lineY; y < canv.height; y += 50) {
+        for (var y = lineY; y < canv.height; y += tileSize) {
           ctx.moveTo(0, y)
           ctx.lineTo(canv.width, y)
         }
@@ -208,10 +256,10 @@ function shoot(e) {
         // Draw Moon
         moonx = 0-(myShip.x*scale)+canv.width/2
         moony = 0-(myShip.y*scale)+canv.height/2
-
+        
         ctx.beginPath()
-        ctx.arc(moonx, moony, 100*scale, 0, 2 * Math.PI)
-        ctx.fillStyle = 'lightgrey'
+        ctx.arc(moonx, moony, 2000*scale, 0, 2 * Math.PI)
+        ctx.fillStyle = "lightgrey"
         ctx.fill()
 
 
@@ -223,7 +271,7 @@ function shoot(e) {
 
               // draw my ship
               ctx.lineWidth = 1
-              ctx.beginPath();
+              ctx.beginPath()
               ctx.moveTo( // nose of the ship
                 myShipX + 4 / 3 * (myShip.r+5) * Math.cos(myShip.a) * scale,
                 myShipY - 4 / 3 * (myShip.r+5) * Math.sin(myShip.a) * scale
@@ -245,7 +293,7 @@ function shoot(e) {
                 // draw the thruster
                 ctx.fillStyle = "red";
                 ctx.strokeStyle = "yellow";
-                ctx.beginPath();
+                ctx.beginPath()
                 ctx.moveTo( // rear left
                     myShipX - (myShip.r+5) * (2 / 3 * Math.cos(myShip.a) + 0.5 * Math.sin(myShip.a)) * scale,
                     myShipY + (myShip.r+5) * (2 / 3 * Math.sin(myShip.a) - 0.5 * Math.cos(myShip.a)) * scale
@@ -269,6 +317,7 @@ function shoot(e) {
               shipY = (ship.y*scale)-(myShip.y*scale)+canv.height/2
 
               ctx.lineWidth = 1
+              ctx.strokeStyle = "#EC611C"
               ctx.beginPath();
               ctx.moveTo( // nose of the ship
                 shipX + 4 / 3 * (ship.r+5) * Math.cos(ship.a) * scale,
@@ -286,6 +335,12 @@ function shoot(e) {
               ctx.stroke()
               ctx.fillStyle = "#EC611C"
               ctx.fill()
+
+              // Draw Name
+              ctx.font = "20px Arial"
+              ctx.fillStyle = "yellow"
+              ctx.fillText(`${ship.name}`, shipX-(5*ship.name.length), shipY+40)
+
               if (ship.thrusting) {
                 // draw the thruster
                 ctx.fillStyle = "red";
