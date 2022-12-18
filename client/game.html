@@ -337,10 +337,12 @@ function shoot(e) {
               ctx.fill()
 
               // Draw Name
-              ctx.font = "20px Arial"
-              ctx.fillStyle = "yellow"
-              ctx.fillText(`${ship.name}`, shipX-(5*ship.name.length), shipY+40)
-
+              if (ship.name.length) {
+                ctx.font = `${20*scale}px Arial`
+                ctx.fillStyle = "yellow"
+                ctx.fillText(`${ship.name}`, shipX-(5*ship.name.length)*scale, shipY+40*scale)  
+              }
+              
               if (ship.thrusting) {
                 // draw the thruster
                 ctx.fillStyle = "red";
