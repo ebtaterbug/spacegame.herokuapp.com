@@ -102,7 +102,6 @@
         text-decoration: none;
         cursor: pointer;
       }
-
     </style>
 </head>
 <body>
@@ -262,6 +261,11 @@ function shoot(e) {
         ctx.fillStyle = "lightgrey"
         ctx.fill()
 
+        //Draw Scores
+        ctx.font = "30px Arial"
+        ctx.fillStyle = "white"
+        ctx.fillText("Scores", canv.width-200, 50)
+
 
         for (let i=0; i<players.length; i++) {
             ship = players[i]
@@ -337,11 +341,9 @@ function shoot(e) {
               ctx.fill()
 
               // Draw Name
-              if (ship.name.length) {
-                ctx.font = `${20*scale}px Arial`
-                ctx.fillStyle = "yellow"
-                ctx.fillText(`${ship.name}`, shipX-(5*ship.name.length)*scale, shipY+40*scale)  
-              }
+              ctx.font = `${20*scale}px Arial`
+              ctx.fillStyle = "yellow"
+              ctx.fillText(`${ship.name}`, shipX-(5*ship.name.length)*scale, shipY+40*scale)  
               
               if (ship.thrusting) {
                 // draw the thruster
@@ -365,6 +367,11 @@ function shoot(e) {
                 ctx.stroke()
               }
             }  
+          // Draw Name
+          
+          ctx.font = "20px Arial"
+          ctx.fillStyle = "white"
+          ctx.fillText(`${ship.name}, ${ship.points}`, canv.width-200, ((i+1)*20)+60)
         }
     })
 </script>

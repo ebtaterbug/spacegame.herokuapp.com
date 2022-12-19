@@ -66,6 +66,7 @@ class Ship {
       this.mass = 1;
       this.id;
       this.name;
+      this.points = 0;
   }
 
   rotate(){
@@ -184,6 +185,7 @@ function update() {
       }
       for (const [id, ship] of players) {
         if (bullet.collision(ship) && (ship.id != bullet.id)) {
+          players.get(bullet.id).points += 1
           ship.thrust.x = 0
           ship.thrust.y = 0
           ship.x = -2000
